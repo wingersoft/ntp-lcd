@@ -1,5 +1,5 @@
 ### Basic NTP Time/Date and BME280 Temperature/Humidity/Pressure Sensor
-This is a simple Arduino project that reads temperature, humidity abd pressure from a BME280 sensor using an ESP32 board.
+This is a simple Arduino project that gets the time from a NTP server, reads temperature, humidity and pressure from a BME280 sensor. Displays all data on a 16x2 LCD display, using an ESP32 board.
 
 ![picture](breadbord.jpg)
 
@@ -16,8 +16,8 @@ This is a simple Arduino project that reads temperature, humidity abd pressure f
 * LiquidCrystal_I2C library
 
 ### Circuit
-* BME280 data pin connected to GPIO 21, 22
-* LCD Display data pins connected to GPIO 21, 22
+* BME280 data pins connected to GPIO 21, 22 (I2C)
+* LCD Display data pins connected to GPIO 21, 22 (I2C)
 
 ### Configuration
 Update ssid and password in config.h with your WiFi credentials

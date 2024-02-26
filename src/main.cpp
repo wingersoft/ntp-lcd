@@ -98,7 +98,7 @@ void setup()
     LCD.print("WiFi ");
     // Connect to Wi-Fi
     WiFi.begin(ssid, password);
-   // WiFi.begin("Wokwi-GUEST", "", 6);
+    // WiFi.begin("Wokwi-GUEST", "", 6);
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(250);
