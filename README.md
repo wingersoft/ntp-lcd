@@ -1,12 +1,36 @@
-## Basic DHT22 temp/hum sensor MQTT demo
+### Basic NTP Time/Date and BME280 Temperature/Humidity/Pressure Sensor
+This is a simple Arduino project that reads temperature, humidity abd pressure from a BME280 sensor using an ESP32 board.
 
-## Hardware
+### Hardware
+* ESP32 Wemos Lolin32 development board
+* BME280 sensor
+* LCD Display 16x2 with I2C interface
+* Breadboard and jumper wires
+* USB cable for programming and power
 
-* ESP32 Wroom.
+### Software
+* Visual Code PlatformIO IDE
+* BME280 sensor library
+* LiquidCrystal_I2C library
 
-## Documentation links
+### Circuit
+* BME280 data pin connected to GPIO 21, 22
+* LCD Display data pins connected to GPIO 21, 22
 
+### Configuration
+Update ssid and password in config.h with your WiFi credentials
+
+### Operation
+* The ESP32 connects to the configured WiFi network
+* Get time from NTP server
+* Temperature, humidity and pressure data is read from the BME280 sensor
+* Display all data on the LCD display
+
+### To Do
+* Add error handling and recovery logic
+* Enable OTA firmware updates
+
+### References
 * [Arduino](https://www.arduino.cc/)
 * [Wokwi](https://wokwi.com/)
-* [RemoteXY](https://remotexy.com/en/editor/)
-* [DTH22 datasheet](https://www.sparkfun.com/datasheets/Sensors/Temperature/DHT22.pdf)
+* [BME280 datasheet](https://www.bosch-sensortec.com/products/environmental-sensors/humidity-sensors-bme280/)
