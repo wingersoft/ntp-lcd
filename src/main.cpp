@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Adafruit_BME280.h>
 #include <LiquidCrystal_I2C.h>
 #include <WiFi.h>
 #include <Wire.h>
@@ -7,13 +8,25 @@
 // LCD display data
 LiquidCrystal_I2C LCD = LiquidCrystal_I2C(0x27, 16, 2);
 
+// Set sensor pin numbers
+const int BME_I2C_SDA  = 21;
+const int BME_I2C_SCL  = 22;
+const int INTERNAL_LED = 5;
+
+// Create BME280 object
+Adafruit_BME280 bme;
+
 // ntp server data
 #define NTP_SERVER "pool.ntp.org"
 #define UTC_OFFSET 3600
 #define UTC_OFFSET_DST 3600
 
-// global minute variable
-int minute;
+// global minute variables
+int seconds;
+int minutes;
+float temp;
+float humidity;
+float pressure;
 
 //
 // Get the local time
@@ -34,8 +47,10 @@ void printLocalTime()
     // Print the date
     LCD.setCursor(0, 1);
     LCD.print(&timeinfo, "%d-%m-%Y");
+    // Get the seconds
+    seconds = timeinfo.tm_sec;
     // Get the minute
-    minute = timeinfo.tm_min;
+    minutes = timeinfo.tm_min;
 }
 
 //
@@ -43,12 +58,15 @@ void printLocalTime()
 //
 void printTempHumPres()
 {
-    // Read sensor data
-    float temp = 22.5;
-    float humidity = 42;
-    float pressure = 1002;
-    // Print temperature and humidity
-    if (minute % 2 == 0)
+    if (seconds == 0)
+    { 
+        // Read sensor data
+        temp = bme.readTemperature();
+        humidity = bme.readHumidity();
+        pressure = bme.readPressure() / 100.0F;
+    }
+     // Print temperature and humidity
+    if (minutes % 2 == 0)
     {
         LCD.setCursor(12, 0);
         LCD.print(String(temp, 1));
@@ -56,8 +74,8 @@ void printTempHumPres()
     else
     {
         LCD.setCursor(12, 0);
-        String hums = String(humidity, 0) + " %";
-        LCD.print(hums);
+        String humStr = String(humidity, 0) + " %";
+        LCD.print(humStr);
     }
     // Print pressure
     LCD.setCursor(12, 1);
@@ -94,6 +112,15 @@ void setup()
     LCD.clear();
     // Configure the NTP client
     configTime(UTC_OFFSET, UTC_OFFSET_DST, NTP_SERVER);
+    // Initialize BME280 sensor
+    Wire.begin(BME_I2C_SDA, BME_I2C_SCL);
+    bool status = bme.begin(0x76, &Wire);
+    // Check if sensor is connected
+    if (!status) 
+    {
+        Serial.println("Could not find BME280 sensor!");
+        while (1);
+    }   
 }
 
 //
