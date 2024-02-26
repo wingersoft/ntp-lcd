@@ -1,6 +1,8 @@
 ### Basic NTP Time/Date and BME280 Temperature/Humidity/Pressure Sensor
 This is a simple Arduino project that reads temperature, humidity abd pressure from a BME280 sensor using an ESP32 board.
 
+![picture](breadbord.jpg)
+
 ### Hardware
 * ESP32 Wemos Lolin32 development board
 * BME280 sensor
