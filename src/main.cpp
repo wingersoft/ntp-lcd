@@ -3,7 +3,7 @@
 #include <LiquidCrystal_I2C.h>
 #include <WiFi.h>
 #include <Wire.h>
-#include "../../config.h"
+#include "../../config.h" // use hidden config file to store secrets
 
 // LCD display data
 LiquidCrystal_I2C LCD = LiquidCrystal_I2C(0x27, 16, 2);
@@ -19,11 +19,12 @@ Adafruit_BME280 bme;
 // ntp server data
 #define NTP_SERVER "pool.ntp.org"
 #define UTC_OFFSET 3600
-#define UTC_OFFSET_DST 3600
+#define UTC_OFFSET_DST 0
 
-// global minute variables
+// global variables to store time and date
 int seconds;
 int minutes;
+// sensor data variables to store the readings
 float temp;
 float humidity;
 float pressure;
@@ -40,7 +41,7 @@ void printLocalTime()
         LCD.setCursor(0, 1);
         LCD.println("Connection Err");
         return;
-    }  
+    }
     // Print the time
     LCD.setCursor(0, 0);
     LCD.print(&timeinfo, "%H:%M:%S");
@@ -59,9 +60,9 @@ void printLocalTime()
 void printTempHumPres()
 {
     if (seconds == 0)
-    { 
+    {
         // Read sensor data
-        temp = bme.readTemperature();
+        temp = bme.readTemperature() - 1.0;
         humidity = bme.readHumidity();
         pressure = bme.readPressure() / 100.0F;
     }
@@ -98,6 +99,7 @@ void setup()
     LCD.print("WiFi ");
     // Connect to Wi-Fi
     WiFi.begin(ssid, password);
+    // use Wokwi-GUEST to connect to the WiFi
     // WiFi.begin("Wokwi-GUEST", "", 6);
     while (WiFi.status() != WL_CONNECTED)
     {
@@ -116,11 +118,11 @@ void setup()
     Wire.begin(BME_I2C_SDA, BME_I2C_SCL);
     bool status = bme.begin(0x76, &Wire);
     // Check if sensor is connected
-    if (!status) 
+    if (!status)
     {
         Serial.println("Could not find BME280 sensor!");
         while (1);
-    }   
+    }
 }
 
 //
